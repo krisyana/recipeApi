@@ -1,66 +1,126 @@
-const User = require('../model/User');
+const { User } = require('../models');
+const { decode } = require('../helpers/bcrypt');
+const { sign } = require('../helpers/jwt');
+const { OAuth2Client } = require('google-auth-library');
 
 class UserController {
-    static async findAll(req, res) {
+    static async findAll(req, res, next) {
         try {
-            const users = await User.findAll();
-            res.json({ users });
-        } catch (error) {
-            res.status(500).json({ error });
+            const result = await User.findAll();
+            res.status(200).json(result);
+        } catch (err) {
+            next(err);
         }
     }
-    static async create(req, res) {
+    static async signup(req, res, next) {
+        const { email, password } = req.body;
         try {
-            const { username, email, password, role, phoneNumber, address } =
-            req.body;
-            const created = await User.create({
-                username,
-                email,
-                password,
-                role,
-                phoneNumber,
-                address,
+            const result = await User.create({ email, password, username });
+            res.status(201).json({ id: result.id, email: result.email });
+        } catch (err) {
+            next(err);
+        }
+    }
+    static async googleAuth(req, res, next) {
+        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        const idToken = req.body.id_token;
+        try {
+            const ticket = await client.verifyIdToken({
+                idToken: idToken,
+                audience: process.env.GOOGLE_CLIENT_ID,
             });
-            res.status(201).json({ created });
-        } catch (error) {
-            res.status(500).json({ error });
+            const payload = ticket.getPayload();
+            const { email, name: username } = payload;
+            const googleUser = await User.findOrCreate({
+                where: {
+                    email,
+                },
+                defaults: {
+                    email,
+                    username,
+                    password: email,
+                },
+            });
+            // console.log(googleUser)
+            const access_token = await sign({
+                id: googleUser[0].id,
+                email: googleUser[0].email,
+                role: googleUser[0].role,
+            });
+            // console.log(access_token)
+            res.status(200).json({ access_token });
+        } catch (err) {
+            next(err);
         }
     }
-    static async findOne(req, res) {
+    static async login(req, res, next) {
+        const { email, password } = req.body;
         try {
-            const { id } = req.params;
-            const find = await User.findOne(id);
-            res.status(200).json({ find });
-        } catch (error) {
-            res.status(500).json({ error });
+            const userFind = await User.findOne({ where: { email } });
+            if (userFind) {
+                const validate = decode(password, userFind.password);
+                if (validate) {
+                    const access_token = sign({
+                        id: userFind.id,
+                        email: userFind.email,
+                        role: userFind.role,
+                    });
+                    res.status(200).json({ access_token });
+                } else {
+                    throw {
+                        name: 'LOGINERROR',
+                        status: 401,
+                        msg: 'Email/Password is not valid',
+                    };
+                }
+            } else {
+                throw {
+                    name: 'LOGINERROR',
+                    status: 401,
+                    msg: 'Email/Password is not valid',
+                };
+            }
+        } catch (err) {
+            next(err);
         }
     }
 
-    static async delete(req, res) {
+    static async update(req, res, next) {
+        const { name } = req.body;
+        const { id } = req.params;
         try {
-            const { id } = req.params;
-            const find = await User.delete(id);
-            res.status(200).json({ find });
-        } catch (error) {
-            res.status(500).json({ error });
+            const user = await User.findByPk(id);
+            if (user) {
+                const result = await User.update({ name }, { where: { id }, returning: true });
+                res.status(200).json(result[1][0]);
+            } else {
+                throw {
+                    name: 'NOTFOUND',
+                    status: 404,
+                    msg: `User with id: ${id} not found`,
+                };
+            }
+        } catch (err) {
+            next(err);
         }
     }
-    static async update(req, res) {
+
+    static async delete(req, res, next) {
+        const { id } = req.params;
         try {
-            const { id } = req.params;
-            const { username, email, password, role, phoneNumber, address } =
-            req.body;
-            const updated = await User.update(id, {
-                username,
-                email,
-                password,
-                role,
-                phoneNumber,
-                address,
-            });
-            res.status(201).json({ updated });
-        } catch (error) {
-            res.status(500).json({ error });
+            const user = await User.findByPk(id);
+            if (user) {
+                const result = await User.destroy({ where: { id } });
+                res.status(200).json({ message: `User with id: ${id} deleted` });
+            } else {
+                throw {
+                    name: 'NOTFOUND',
+                    status: 404,
+                    msg: `User with id: ${id} not found`,
+                };
+            }
+        } catch (err) {
+            next(err);
         }
     }
 }
