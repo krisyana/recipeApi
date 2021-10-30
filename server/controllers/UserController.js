@@ -13,7 +13,7 @@ class UserController {
         }
     }
     static async signup(req, res, next) {
-        const { email, password } = req.body;
+        const { email, password, username } = req.body;
         try {
             const result = await User.create({ email, password, username });
             res.status(201).json({ id: result.id, email: result.email });
@@ -63,7 +63,6 @@ class UserController {
                     const access_token = sign({
                         id: userFind.id,
                         email: userFind.email,
-                        role: userFind.role,
                     });
                     res.status(200).json({ access_token });
                 } else {

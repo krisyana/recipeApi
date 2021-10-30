@@ -1,9 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
-const { encode } = require('../helpers/bcrypt');
-
 module.exports = (sequelize, DataTypes) => {
-    class User extends Model {
+    class Favorite extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,51 +9,50 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            User.hasMany(models.Favorite);
+            Favorite.belongsTo(models.User);
         }
     }
-    User.init({
-        username: DataTypes.STRING,
-        email: {
+    Favorite.init({
+        IngId: DataTypes.INTEGER,
+        title: {
             type: DataTypes.STRING,
-            unique: true,
             allowNull: false,
             validate: {
                 notNull: {
-                    msg: 'Email is required',
+                    msg: 'Title is required',
                 },
                 notEmpty: {
-                    msg: 'Email is required',
-                },
-                isEmail: {
-                    msg: 'Must be an email',
+                    msg: 'Title is required',
                 },
             },
         },
-        password: {
+        image: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
                 notNull: {
-                    msg: 'Password is required',
+                    msg: 'ImageUrl is required',
                 },
                 notEmpty: {
-                    msg: 'Password is required',
+                    msg: 'ImageUrl is required',
                 },
-                len: {
-                    args: [5, 255],
-                    msg: 'Password min 5 character',
+            },
+        },
+        UserId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            validate: {
+                notNull: {
+                    msg: 'UserId is required',
+                },
+                notEmpty: {
+                    msg: 'UserId is required',
                 },
             },
         },
     }, {
-        hooks: {
-            afterValidate: (user, options) => {
-                user.password = encode(user.password);
-            },
-        },
         sequelize,
-        modelName: 'User',
+        modelName: 'Favorite',
     });
-    return User;
+    return Favorite;
 };

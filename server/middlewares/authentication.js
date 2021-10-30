@@ -13,7 +13,7 @@ const authentication = async(req, res, next) => {
             };
         }
         const payload = verify(token);
-        const foundUser = User.findOne({
+        const foundUser = await User.findOne({
             where: {
                 email: payload.email,
             },
@@ -28,7 +28,6 @@ const authentication = async(req, res, next) => {
         req.user = {
             id: foundUser.id,
             email: foundUser.email,
-            role: foundUser.role,
         };
         next();
     } catch (err) {
