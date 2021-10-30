@@ -8,22 +8,21 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-  HStack,
 } from '@chakra-ui/react';
 import * as React from 'react';
-import { FavouriteButton } from './FavoriteButton';
 import { useHistory } from 'react-router-dom';
 
-export const Card = props => {
+export const CardFav = props => {
   const history = useHistory();
   const { recipe, rootProps } = props;
-  const { title, image, healthScore, id } = recipe;
+  const { title, image, id } = recipe;
   return (
     <Stack
       spacing={useBreakpointValue({
         base: '4',
         md: '5',
       })}
+      maxW="50vh"
       {...rootProps}
     >
       <Box position="relative">
@@ -39,15 +38,6 @@ export const Card = props => {
             })}
           />
         </AspectRatio>
-        {localStorage.getItem('access_token') ? (
-          <FavouriteButton
-            position="absolute"
-            top="4"
-            right="4"
-            aria-label={`Add ${title} to your favourites`}
-            recipe={recipe}
-          />
-        ) : null}
       </Box>
       <Stack>
         <Stack spacing="1">
@@ -59,11 +49,6 @@ export const Card = props => {
             {title}
           </Text>
         </Stack>
-        <HStack>
-          <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')}>
-            Health Score : {healthScore}
-          </Text>
-        </HStack>
       </Stack>
       <Stack align="center">
         <Button

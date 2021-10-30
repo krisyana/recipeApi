@@ -74,6 +74,8 @@ export function actionLogin(payload) {
             const { access_token } = response.data;
             localStorage.setItem('access_token', access_token);
             dispatch(setLoginSuccess(access_token));
+            toast.success('Login sucess');
+            dispatch(setLoading(false));
         } catch (err) {
             let message;
             if (err.response.status === 401) {
@@ -82,6 +84,8 @@ export function actionLogin(payload) {
                 message = 'Internal Server Error';
             }
             dispatch(setError(message));
+            toast.error(message);
+            dispatch(setLoading(false));
         }
     };
 }
@@ -90,6 +94,7 @@ export function actionLogout() {
     return async function(dispatch) {
         localStorage.clear();
         dispatch(setLogout(null));
+        toast.success('Logout sucess');
     };
 }
 
@@ -99,6 +104,7 @@ export function actionAddUsers(payload) {
         try {
             await localHost.post('/register', payload, {});
             dispatch(setLoading(false));
+            toast.success('Register sucess');
         } catch (err) {
             dispatch(setLoading(false));
             const { msg } = err.response.data;

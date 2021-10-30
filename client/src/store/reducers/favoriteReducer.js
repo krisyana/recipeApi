@@ -7,7 +7,7 @@ import {
 } from '../keys';
 
 const initialState = {
-    myFavorites: [],
+    favorites: [],
     isLoading: false,
     error: null,
 };
@@ -16,11 +16,11 @@ export default function reducer(state = initialState, action) {
     const { type, payload } = action;
     switch (type) {
         case GET_FAVORITES:
-            return {...state, events: payload };
+            return {...state, favorites: payload };
         case GET_MY_FAVORITES:
-            return {...state, myFavorites: payload };
+            return {...state, favorites: payload };
         case ADD_FAVORITE_USER:
-            return {...state, myFavorites: [...state.myFavorites, payload] };
+            return {...state, favorites: [...state.favorites, payload] };
         case SET_ERROR_FAVORITE:
             return {...state, error: payload };
         case SET_LOADING_FAVORITE:

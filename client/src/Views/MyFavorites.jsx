@@ -1,22 +1,22 @@
 import { Center, Heading } from '@chakra-ui/layout';
 import { Spinner } from '@chakra-ui/spinner';
-import React, { useEffect, useState } from 'react';
-import { Card } from '../Components/Home/Card';
+import React, { useEffect } from 'react';
 import { CardLayout } from '../Components/Layout/CardLayout';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchFAVORITEs } from '../store/actions/actionFavorite';
+import { CardFav } from '../Components/Home/CardFav';
 
 export default function MyFavorites() {
-  const [favorites, setfavorites] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { favorites, isLoading } = useSelector(state => state.favoriteState);
 
   useEffect(() => {
-    setLoading(true);
-
-    setLoading(false);
-  }, []);
+    dispatch(fetchFAVORITEs());
+  }, [dispatch]);
 
   return (
     <CardLayout>
-      {favorites.length === 0 ? (
+      {isLoading && favorites.length === 0 ? (
         <Center h="100px">
           <Spinner
             thickness="4px"
@@ -26,13 +26,13 @@ export default function MyFavorites() {
             size="xl"
           />
         </Center>
-      ) : !favorites || (favorites.length === 0 && loading === false) ? (
+      ) : !favorites || (favorites.length === 0 && isLoading === false) ? (
         <Center h="100px">
-          <Heading>No Recipes</Heading>
+          <Heading>No Favorite Yet</Heading>
         </Center>
       ) : (
         favorites.map(recipe => {
-          return <Card key={recipe.title} recipe={recipe} />;
+          return <CardFav key={recipe.title + 'favorites'} recipe={recipe} />;
         })
       )}
     </CardLayout>

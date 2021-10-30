@@ -60,6 +60,7 @@ export function fetchFAVORITEs() {
         } catch (err) {
             console.log(err.response.data);
             dispatch(setError(err.response.data));
+            dispatch(setLoading(false));
         }
     };
 }

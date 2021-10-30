@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import {
   Box,
   Heading,
@@ -16,8 +17,10 @@ import {
   InputGroup,
   InputRightElement,
 } from '@chakra-ui/react';
+import { actionAddUsers } from '../store/actions/actionUser';
 
 const Register = () => {
+  const dispatch = useDispatch();
   const [register, setRegister] = useState({
     username: '',
     email: '',
@@ -70,6 +73,7 @@ const Register = () => {
               e.preventDefault();
               // your login logic here
               console.log('register created', register);
+              dispatch(actionAddUsers(register));
             }}
           >
             <Stack spacing="6">

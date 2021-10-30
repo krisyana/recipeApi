@@ -22,13 +22,28 @@ import { useDisclosure } from '@chakra-ui/hooks';
 import Instruction from '../Components/Detail/Instruction';
 import { useParams } from 'react-router';
 import { Spinner } from '@chakra-ui/spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { actionAddFAVORITEUser } from '../store/actions/actionFavorite';
+import { toast } from 'react-toastify';
 
 export default function Detail() {
+  const { favorites } = useSelector(state => state.favoriteState);
+  const dispatch = useDispatch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [recipe, setRecipe] = useState({});
   const [instruction, setinstruction] = useState([]);
   const [loading, setLoading] = useState(false);
   let { id } = useParams();
+  const addFavorite = () => {
+    if (!localStorage.getItem('access_token')) {
+      toast.warning('Login First to Favorite');
+    } else if (favorited) {
+      toast.warning('Already Favorited');
+    } else {
+      dispatch(actionAddFAVORITEUser(recipe));
+    }
+  };
+  const favorited = favorites.find(i => Number(i.IngId) === Number(recipe.id));
 
   useEffect(() => {
     setLoading(true);
@@ -237,6 +252,7 @@ export default function Detail() {
                   _focus={{
                     bg: 'green.500',
                   }}
+                  onClick={() => addFavorite()}
                 >
                   Add To Favorites
                 </Button>

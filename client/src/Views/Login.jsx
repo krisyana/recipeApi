@@ -72,12 +72,7 @@ export default function Login() {
           <chakra.form
             onSubmit={e => {
               e.preventDefault();
-              // your login logic here
-              console.log('Login created', login);
-              dispatch(actionLogin(login));
-              if (localStorage.getItem('access_token')) {
-                history.push('/favorites');
-              }
+              dispatch(actionLogin(login)).then(history.push('/favorites'));
             }}
           >
             <Stack spacing="6">

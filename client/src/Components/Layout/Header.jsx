@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Box, Flex, Text, Button } from '@chakra-ui/react';
 import { Logo } from '../../Logo';
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import { useColorModeValue } from '@chakra-ui/react';
 import { ColorModeSwitcher } from '../../ColorModeSwitcher';
+import { actionLogout } from '../../store/actions/actionUser';
 
 const MenuItems = props => {
   const { children, isLast, to = '/', ...rest } = props;
@@ -24,9 +26,13 @@ const MenuItems = props => {
 };
 
 const Header = props => {
+  const dispatch = useDispatch();
+  const { accesstoken } = useSelector(state => state.usersState);
+
   const [show, setShow] = React.useState(false);
   const toggleMenu = () => setShow(!show);
   const colorMode = useColorModeValue('white', 'gray.800');
+  useEffect(() => {}, [dispatch, accesstoken]);
 
   return (
     <Flex
@@ -63,32 +69,72 @@ const Header = props => {
         >
           <MenuItems to="/">Home</MenuItems>
           <MenuItems to="/recipes">Recipes </MenuItems>
-          <MenuItems to="/register">
-            <Button
-              size="sm"
-              rounded="md"
-              color={colorMode}
-              bgGradient="linear(to-r, teal.200, pink.500)"
-              _hover={{
-                bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
-              }}
-            >
-              Create Account
-            </Button>
-          </MenuItems>
-          <MenuItems to="/login" isLast>
-            <Button
-              size="sm"
-              rounded="md"
-              color={colorMode}
-              bgGradient="linear(to-r, teal.200, pink.500)"
-              _hover={{
-                bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
-              }}
-            >
-              Login
-            </Button>
-          </MenuItems>
+          {!localStorage.getItem('access_token') ? (
+            <>
+              <MenuItems to="/register">
+                <Button
+                  size="sm"
+                  rounded="md"
+                  color={colorMode}
+                  bgGradient="linear(to-r, teal.200, pink.500)"
+                  _hover={{
+                    bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
+                  }}
+                >
+                  Create Account
+                </Button>
+              </MenuItems>
+              <MenuItems to="/login" isLast>
+                <Button
+                  size="sm"
+                  rounded="md"
+                  color={colorMode}
+                  bgGradient="linear(to-r, teal.200, pink.500)"
+                  _hover={{
+                    bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
+                  }}
+                >
+                  Login
+                </Button>
+              </MenuItems>
+            </>
+          ) : null}
+
+          {localStorage.getItem('access_token') ? (
+            <>
+              <MenuItems to="/favorites">
+                <Button
+                  size="sm"
+                  rounded="md"
+                  color={colorMode}
+                  bgGradient="linear(to-r, teal.200, pink.500)"
+                  _hover={{
+                    bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
+                  }}
+                >
+                  My Favorites
+                </Button>
+              </MenuItems>
+              <MenuItems to="/" isLast>
+                <Button
+                  size="sm"
+                  rounded="md"
+                  color={colorMode}
+                  bgGradient="linear(to-r, teal.200, pink.500)"
+                  _hover={{
+                    bg: ['teal.100', 'teal.100', 'teal.600', 'teal.600'],
+                  }}
+                  onClick={() => {
+                    dispatch(actionLogout());
+                    localStorage.clear();
+                  }}
+                >
+                  Logout
+                </Button>
+              </MenuItems>
+            </>
+          ) : null}
+
           <ColorModeSwitcher justifySelf="flex-end" />
         </Flex>
       </Box>
