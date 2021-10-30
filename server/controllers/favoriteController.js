@@ -3,7 +3,6 @@ const { Favorite } = require('../models');
 class FavoriteController {
     static async findAll(req, res, next) {
         try {
-            console.log(req.user);
             const { id } = req.user;
             const result = await Favorite.findAll({ where: { UserId: id } });
             res.status(200).json(result);

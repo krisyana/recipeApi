@@ -18,19 +18,9 @@ export default function reducer(state = initialState, action) {
         case GET_FAVORITES:
             return {...state, events: payload };
         case GET_MY_FAVORITES:
-            return {...state, myEvents: payload };
+            return {...state, myFavorites: payload };
         case ADD_FAVORITE_USER:
-            let added = state.events.filter(el => el.id === Number(payload.id));
-            let newEvents = state.events.filter(el => el.id !== Number(payload.id));
-            return {
-                ...state,
-                myEvents: state.myEvents.concat({
-                    Event: added[0],
-                    status: payload.status,
-                    trelloCardId: payload.trelloCardId,
-                }),
-                events: newEvents,
-            };
+            return {...state, myFavorites: [...state.myFavorites, payload] };
         case SET_ERROR_FAVORITE:
             return {...state, error: payload };
         case SET_LOADING_FAVORITE:

@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Box,
@@ -13,10 +15,23 @@ import {
   FormLabel,
   Input,
   Stack,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
-import { PasswordField } from '../Components/PasswordField';
+import { actionLogin } from '../store/actions/actionUser';
 
 export default function Login() {
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const [login, setLogin] = useState({
+    email: '',
+    password: '',
+  });
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
+  const handleChange = event => {
+    setLogin({ ...login, [event.target.name]: event.target.value });
+  };
   return (
     <Box
       bg={useColorModeValue('gray.50', 'inherit')}
@@ -58,6 +73,11 @@ export default function Login() {
             onSubmit={e => {
               e.preventDefault();
               // your login logic here
+              console.log('Login created', login);
+              dispatch(actionLogin(login));
+              if (localStorage.getItem('access_token')) {
+                history.push('/favorites');
+              }
             }}
           >
             <Stack spacing="6">
@@ -68,9 +88,23 @@ export default function Login() {
                   type="email"
                   autoComplete="email"
                   required
+                  onChange={handleChange}
                 />
               </FormControl>
-              <PasswordField />
+              <InputGroup size="md">
+                <Input
+                  pr="4.5rem"
+                  type={show ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  onChange={handleChange}
+                  name="password"
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handleClick}>
+                    {show ? 'Hide' : 'Show'}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>{' '}
               <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
                 Sign in
               </Button>

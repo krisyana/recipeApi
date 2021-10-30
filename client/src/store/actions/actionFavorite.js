@@ -55,28 +55,7 @@ export function fetchFAVORITEs() {
                     access_token,
                 },
             });
-            dispatch(getFAVORITEs(response.data));
-            dispatch(setLoading(false));
-        } catch (err) {
-            console.log(err.response.data);
-            dispatch(setError(err.response.data));
-        }
-    };
-}
-
-export function actionGetMyFAVORITEs() {
-    return async function(dispatch) {
-        dispatch(setLoading(true));
-        try {
-            const access_token = localStorage.getItem('access_token');
-            const { data } = await localHost({
-                method: 'GET',
-                url: '/favorites/users',
-                headers: {
-                    access_token,
-                },
-            });
-            dispatch(getMyFAVORITEs(data));
+            dispatch(getMyFAVORITEs(response.data));
             dispatch(setLoading(false));
         } catch (err) {
             console.log(err.response.data);
@@ -92,20 +71,14 @@ export function actionAddFAVORITEUser(payload) {
             const access_token = localStorage.getItem('access_token');
             const { data } = await localHost({
                 method: 'POST',
-                url: '/favorites/users',
+                url: '/favorites',
                 headers: {
                     access_token,
                 },
                 data: payload,
             });
-            dispatch(
-                addFAVORITEUser({
-                    id: payload.FAVORITEId,
-                    status: data.status,
-                    trelloCardId: data.trelloCardId,
-                })
-            );
-            toast.success('FAVORITE booked');
+            dispatch(addFAVORITEUser(data));
+            toast.success('Recipe Favorited');
             dispatch(setLoading(false));
         } catch (err) {
             console.log(err.response.data);

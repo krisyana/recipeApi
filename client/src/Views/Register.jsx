@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Box,
@@ -13,10 +13,21 @@ import {
   FormLabel,
   Input,
   Stack,
+  InputGroup,
+  InputRightElement,
 } from '@chakra-ui/react';
-import { PasswordField } from '../Components/PasswordField';
 
 const Register = () => {
+  const [register, setRegister] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
+  const handleChange = event => {
+    setRegister({ ...register, [event.target.name]: event.target.value });
+  };
   return (
     <Box
       bg={useColorModeValue('gray.50', 'inherit')}
@@ -58,28 +69,44 @@ const Register = () => {
             onSubmit={e => {
               e.preventDefault();
               // your login logic here
+              console.log('register created', register);
             }}
           >
             <Stack spacing="6">
-              <FormControl id="username">
+              <FormControl id="username" isRequired>
                 <FormLabel>Username</FormLabel>
                 <Input
                   name="username"
                   type="text"
                   autoComplete="username"
+                  onChange={handleChange}
                   required
                 />
               </FormControl>
-              <FormControl id="email">
+              <FormControl id="email" isRequired>
                 <FormLabel>Email address</FormLabel>
                 <Input
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
+                  onChange={handleChange}
                 />
               </FormControl>
-              <PasswordField />
+              <InputGroup size="md">
+                <Input
+                  pr="4.5rem"
+                  type={show ? 'text' : 'password'}
+                  placeholder="Enter password"
+                  onChange={handleChange}
+                  name="password"
+                />
+                <InputRightElement width="4.5rem">
+                  <Button h="1.75rem" size="sm" onClick={handleClick}>
+                    {show ? 'Hide' : 'Show'}
+                  </Button>
+                </InputRightElement>
+              </InputGroup>
               <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
                 Register
               </Button>
