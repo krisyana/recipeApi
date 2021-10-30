@@ -40,16 +40,15 @@ function App() {
               <VStack spacing={8}>
                 <Logo h="40vmin" mt="20vh" pointerEvents="none" />
                 <Text>
-                  Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
+                  Lightning <Code fontSize="xl">Recipes</Code>
                 </Text>
                 <Link
                   color="teal.500"
-                  href="https://chakra-ui.com"
+                  href="/recipes"
                   fontSize="2xl"
-                  target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Learn Chakra
+                  Discover Recipe
                 </Link>
               </VStack>
             </Grid>

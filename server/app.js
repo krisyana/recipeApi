@@ -1,17 +1,17 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 4001;
+const cors = require('cors');
+const routers = require('./routes');
 
+//body-parser
+app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-const { connect } = require('./config/mongodb');
-const userRoute = require('./routes');
+app.use(express.urlencoded({ extended: false }));
 
-app.use('/users', userRoute);
+app.use(routers);
 
-connect().then(() => {
-    console.log('connected to db');
-    app.listen(PORT, () => {
-        console.log('App is Listening at', PORT);
-    });
-});
+// app.listen(PORT, () => {
+//     console.log(`My app listening at http://localhost:${PORT}`)
+// })
+
+module.exports = app;

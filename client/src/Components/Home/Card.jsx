@@ -12,10 +12,12 @@ import {
 } from '@chakra-ui/react';
 import * as React from 'react';
 import { FavouriteButton } from './FavoriteButton';
+import { useHistory } from 'react-router-dom';
 
 export const Card = props => {
+  const history = useHistory();
   const { recipe, rootProps } = props;
-  const { title, image, healthScore } = recipe;
+  const { title, image, healthScore, id } = recipe;
   return (
     <Stack
       spacing={useBreakpointValue({
@@ -61,7 +63,11 @@ export const Card = props => {
         </HStack>
       </Stack>
       <Stack align="center">
-        <Button colorScheme="teal" isFullWidth>
+        <Button
+          onClick={() => history.push(`/detail/${id}`)}
+          colorScheme="teal"
+          isFullWidth
+        >
           See Detail
         </Button>
       </Stack>

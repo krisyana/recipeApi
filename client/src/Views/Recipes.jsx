@@ -26,11 +26,7 @@ export default function Recipes() {
     <>
       <Filter />
       <CardLayout>
-        {!recipes || (recipes.length === 0 && loading === false) ? (
-          <Center h="100px">
-            <Heading>No Recipes</Heading>
-          </Center>
-        ) : loading ? (
+        {recipes.length === 0 ? (
           <Center h="100px">
             <Spinner
               thickness="4px"
@@ -40,9 +36,13 @@ export default function Recipes() {
               size="xl"
             />
           </Center>
+        ) : !recipes || (recipes.length === 0 && loading === false) ? (
+          <Center h="100px">
+            <Heading>No Recipes</Heading>
+          </Center>
         ) : (
           recipes.map(recipe => {
-            return <Card recipe={recipe} />;
+            return <Card key={recipe.title} recipe={recipe} />;
           })
         )}
       </CardLayout>

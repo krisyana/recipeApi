@@ -11,9 +11,9 @@ import { Box, VStack } from '@chakra-ui/layout';
 export default function Nutrients({ nutrients }) {
   return (
     <Accordion defaultIndex={[0]} allowMultiple>
-      {nutrients.map(item => {
+      {nutrients?.map(item => {
         return (
-          <AccordionItem>
+          <AccordionItem key={item.name + 'nutri'}>
             <h2>
               <AccordionButton>
                 <Box flex="1" textAlign="left">

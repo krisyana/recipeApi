@@ -9,6 +9,7 @@ import {
   ModalCloseButton,
   Button,
   Text,
+  Heading,
 } from '@chakra-ui/react';
 
 export default function Instruction({ isOpen, onClose, instructions }) {
@@ -19,13 +20,17 @@ export default function Instruction({ isOpen, onClose, instructions }) {
         <ModalHeader>Instruction</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          {instructions.map(item => {
-            return (
-              <Text my={1}>
-                {item.number}. {item.step}{' '}
-              </Text>
-            );
-          })}
+          {!instructions || instructions.length === 0 ? (
+            <Heading>No Instruction</Heading>
+          ) : (
+            instructions?.map(item => {
+              return (
+                <Text key={item.number + 'instruction'} my={1}>
+                  {item.number}. {item.step}{' '}
+                </Text>
+              );
+            })
+          )}
         </ModalBody>
 
         <ModalFooter>

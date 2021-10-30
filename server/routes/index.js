@@ -1,10 +1,16 @@
-const UserController = require('../controllers/UserController');
 const router = require('express').Router();
+const userRoute = require('./userRoutes');
+const UserController = require('../controllers/userController');
+const errorHandler = require('../middlewares/handleError');
 
-router.get('/', UserController.findAll);
-router.post('/', UserController.create);
-router.get('/:id', UserController.findOne);
-router.delete('/:id', UserController.delete);
-router.put('/:id', UserController.update);
+router.get('/', (req, res) => {
+    res.status(200).json({ msg: 'Success Connect to db' });
+});
+router.post('/register', UserController.signup);
+router.post('/login', UserController.login);
+router.post('/googleRegister', UserController.googleAuth);
+
+router.use('/users', userRoute);
+router.use(errorHandler);
 
 module.exports = router;
