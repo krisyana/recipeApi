@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   Box,
@@ -21,6 +21,8 @@ import {
 import { actionLogin } from '../store/actions/actionUser';
 
 export default function Login() {
+  const { loading } = useSelector(state => state.usersState);
+
   const history = useHistory();
   const dispatch = useDispatch();
   const [login, setLogin] = useState({
@@ -100,7 +102,13 @@ export default function Login() {
                   </Button>
                 </InputRightElement>
               </InputGroup>{' '}
-              <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
+              <Button
+                isLoading={loading}
+                type="submit"
+                colorScheme="blue"
+                size="lg"
+                fontSize="md"
+              >
                 Sign in
               </Button>
             </Stack>
