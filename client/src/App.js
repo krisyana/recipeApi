@@ -19,6 +19,8 @@ import Register from './Views/Register';
 import Detail from './Views/Detail';
 import 'react-toastify/dist/ReactToastify.css';
 import MyFavorites from './Views/MyFavorites';
+import PrivateRoute from './Components/Route/PrivateRoute';
+import UnauthRoute from './Components/Route/UnauthenthicatedRoute';
 
 function App() {
   return (
@@ -30,18 +32,18 @@ function App() {
           <Route path="/recipes">
             <Recipes />
           </Route>
-          <Route path="/login">
+          <UnauthRoute path="/login">
             <Login />
-          </Route>
-          <Route path="/register">
+          </UnauthRoute>
+          <UnauthRoute path="/register">
             <Register />
-          </Route>
+          </UnauthRoute>
           <Route path="/detail/:id">
             <Detail />
           </Route>
-          <Route path="/favorites">
+          <PrivateRoute path="/favorites">
             <MyFavorites />
-          </Route>
+          </PrivateRoute>
           <Route path="/">
             <Box textAlign="center" fontSize="xl">
               <Grid minH="80vh" p={3}>
