@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Box,
   Heading,
@@ -21,6 +21,8 @@ import { actionAddUsers } from '../store/actions/actionUser';
 
 const Register = () => {
   const dispatch = useDispatch();
+  const { loading } = useSelector(state => state.usersState);
+
   const [register, setRegister] = useState({
     username: '',
     email: '',
@@ -111,7 +113,13 @@ const Register = () => {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <Button type="submit" colorScheme="blue" size="lg" fontSize="md">
+              <Button
+                isLoading={loading}
+                type="submit"
+                colorScheme="blue"
+                size="lg"
+                fontSize="md"
+              >
                 Register
               </Button>
             </Stack>

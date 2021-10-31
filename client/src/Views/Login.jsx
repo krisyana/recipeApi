@@ -74,7 +74,7 @@ export default function Login() {
           <chakra.form
             onSubmit={e => {
               e.preventDefault();
-              dispatch(actionLogin(login)).then(history.push('/favorites'));
+              dispatch(actionLogin(login)).then(history.push('/'));
             }}
           >
             <Stack spacing="6">

@@ -77,6 +77,7 @@ export function actionLogin(payload) {
             toast.success('Login sucess');
             dispatch(setLoading(false));
         } catch (err) {
+            toast.error(err.response.data.msg[0]);
             let message;
             if (err.response.status === 401) {
                 message = err.response.data.msg;
@@ -84,7 +85,6 @@ export function actionLogin(payload) {
                 message = 'Internal Server Error';
             }
             dispatch(setError(message));
-            toast.error(message);
             dispatch(setLoading(false));
         }
     };
@@ -107,6 +107,7 @@ export function actionAddUsers(payload) {
             toast.success('Register sucess');
         } catch (err) {
             dispatch(setLoading(false));
+            toast.error(err.response.data.msg[0]);
             const { msg } = err.response.data;
             toast.error(msg);
             if (err.response.status === 400) {
